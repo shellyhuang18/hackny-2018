@@ -56,12 +56,16 @@ socket.on('welcome', function(currentUser, currentUsers){
         ctx.beginPath();
 
         //Time for some colors
+
         var gradient = ctx.createRadialGradient(currentUsers[i].x, currentUsers[i].y, 0, currentUsers[i].x, currentUsers[i].y, currentUsers[i].radius);
+        /*
         gradient.addColorStop(0, "white");
         gradient.addColorStop(0.4, "white");
         gradient.addColorStop(0.4, currentUsers[i].color);
         gradient.addColorStop(1, "black");
-
+        */
+        gradient.addColorStop(0.5, "white");
+        gradient.addColorStop(1, "white");
         ctx.fillStyle = gradient;
         ctx.arc(currentUsers[i].x, currentUsers[i].y, currentUsers[i].radius, Math.PI*2, false);
         ctx.fill();
@@ -71,12 +75,16 @@ socket.on('welcome', function(currentUser, currentUsers){
     ctx.beginPath();
     //Time for some colors
     var gradient = ctx.createRadialGradient(currentUser.x, currentUser.y, 0, currentUser.x, currentUser.y, currentUser.radius);
+    /*
     gradient.addColorStop(0, "white");
     gradient.addColorStop(0.4, "white");
     gradient.addColorStop(0.4, currentUser.color);
     gradient.addColorStop(1, "black");
 
     ctx.fillStyle = gradient;
+    */
+    gradient.addColorStop(0.5, "white");
+    gradient.addColorStop(1, "white");
     ctx.arc(currentUser.x, currentUser.y, currentUser.radius, Math.PI*2, false);
     ctx.fill();
 });
@@ -96,12 +104,16 @@ socket.on('currentUsers', function(currentUsers){
 
         //Time for some colors
         var gradient = ctx.createRadialGradient(currentUsers[i].x, currentUsers[i].y, 0, currentUsers[i].x, currentUsers[i].y, currentUsers[i].radius);
+        /*
         gradient.addColorStop(0, "white");
         gradient.addColorStop(0.4, "white");
         gradient.addColorStop(0.4, currentUsers[i].color);
         gradient.addColorStop(1, "black");
 
         ctx.fillStyle = gradient;
+        */
+        gradient.addColorStop(0.5, "white");
+        gradient.addColorStop(1, "white");
         ctx.arc(currentUsers[i].x, currentUsers[i].y, currentUsers[i].radius, Math.PI*2, false);
         ctx.fill();
     }
@@ -124,10 +136,14 @@ socket.on('playerLeft', function(currentUsers){
 
         //Time for some colors
         var gradient = ctx.createRadialGradient(currentUsers[i].x, currentUsers[i].y, 0, currentUsers[i].x, currentUsers[i].y, currentUsers[i].radius);
+        /*
         gradient.addColorStop(0, "white");
         gradient.addColorStop(0.4, "white");
         gradient.addColorStop(0.4, currentUsers[i].color);
         gradient.addColorStop(1, "black");
+        */
+        gradient.addColorStop(0.5, "white");
+        gradient.addColorStop(1, "white");
 
         ctx.fillStyle = gradient;
         ctx.arc(currentUsers[i].x, currentUsers[i].y, currentUsers[i].radius, Math.PI*2, false);
@@ -140,11 +156,10 @@ socket.on('playerLeft', function(currentUsers){
 socket.on('PlayersMoving', function(players){
     ctx.globalCompositeOperation = "source-over";
     //Lets reduce the opacity of the BG paint to give the final touch
-    ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
+    ctx.fillStyle = "rgba(0, 0, 0)";
     ctx.fillRect(0, 0, W, H);
 
     //Lets blend the particle with the BG
-    ctx.globalCompositeOperation = "lighter";
 
     var players = players;
     var i = 0;
@@ -156,8 +171,7 @@ socket.on('PlayersMoving', function(players){
         //Time for some colors
         var gradient = ctx.createRadialGradient(players[i].x, players[i].y, 0, players[i].x, players[i].y, players[i].radius);
         gradient.addColorStop(0.5, "white");
-        gradient.addColorStop(0.5, players[i].color);
-        gradient.addColorStop(1, "black");
+        gradient.addColorStop(1, "white");
 
         ctx.fillStyle = gradient;
         ctx.arc(players[i].x, players[i].y, players[i].radius, Math.PI*2, false);
