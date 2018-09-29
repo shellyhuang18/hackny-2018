@@ -1,4 +1,3 @@
-var socket = io.connect(); //add socket object
 
 //initializing the canvas
 var canvas = document.getElementById("canvas"),

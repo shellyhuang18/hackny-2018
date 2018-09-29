@@ -2,7 +2,7 @@ const express = require('express');
 app = express(),
     http = require('http').createServer(app),
     io = require('socket.io').listen(http);
-
+const path = require('path');
 const port = 8000;
     http.listen(port);
 
