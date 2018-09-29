@@ -1,6 +1,10 @@
-const express = require('express'), app = express()
-const socket = require('socket.io')
-const path    = require("path");
+const express = require('express');
+app = express(),
+    http = require('http').createServer(app),
+    io = require('socket.io').listen(http);
+
+const port = 8000;
+    http.listen(port);
 
 //set view engine and static folder
 app.set('view engine', 'pug');
@@ -18,26 +22,69 @@ app.get('/game',function(req,res){
   //__dirname : It will resolve to your project folder.
 });
 
-var port = 8000
-const server = app.listen(port, () =>{
-    console.log('Running on port ', port)
-})
 
-//set up Socket(on backend)
-//need to also setup on frontend
-var io = socket(server)
 
-//once a connection has been made, do something,
-//socket param is the particular socket that connects(from someone else)
-io.on('connection', (socket) => {
-    //socket.id
-    console.log("made a connection")
 
-    //when connection from client was made with "data" message (name)
-    socket.on('join-room', (room) =>{
-        socket.join(room)
-        console.log('joined ', room, " with id: ", socket.id)
-    })
+    var players = [];
 
-    //io.sockets - refer to all sockets connected to server
-})
+    //Lets create a function which will help us to create multiple players
+    function newPlayer() {
+        this.name;
+        this.id = 1;
+        this.x = Math.random() * 500;
+        this.y =  Math.random() * 500;
+        //Random colors
+        var r = Math.random()*255>>0;
+        var g = Math.random()*255>>0;
+        var b = Math.random()*255>>0;
+        this.color = "rgba(" + r + ", " + g + ", " + b + ", 0.5)";
+
+        //Random size
+        this.radius = Math.random()*20+20;
+        this.speed =  5;
+
+        return {'name' : this.name,"x" : this.x,"y" : this.y,"color" : this.color, "radius" : this.radius,"speed" : this.speed}
+    }
+
+
+    //calls to the server and tracking connection of each new user
+    io.sockets.on('connection', function(socket){
+        var currentPlayer = new newPlayer(); //new player made
+        players.push(currentPlayer); //push player object into array
+
+        //create the players Array
+        socket.broadcast.emit('currentUsers', players);
+        socket.emit('welcome', currentPlayer, players);
+
+            //disconnected
+        socket.on('disconnect', function(){
+            players.splice(players.indexOf(currentPlayer), 1);
+            console.log(players);
+            socket.broadcast.emit('playerLeft', players);
+        });
+
+        socket.on('pressed', function(key){
+            if(key === 38){
+                currentPlayer.y -= currentPlayer.speed;
+                socket.emit('PlayersMoving', players);
+                socket.broadcast.emit('PlayersMoving', players);
+            }
+            if(key === 40){
+                currentPlayer.y += currentPlayer.speed;
+                socket.emit('PlayersMoving', players);
+                socket.broadcast.emit('PlayersMoving', players);
+            }
+            if(key === 37){
+                currentPlayer.x -= currentPlayer.speed;
+                socket.emit('PlayersMoving', players);
+                socket.broadcast.emit('PlayersMoving', players);
+            }
+            if(key === 39){
+                currentPlayer.x += currentPlayer.speed;
+                socket.emit('PlayersMoving', players);
+                socket.broadcast.emit('PlayersMoving', players);
+            }
+        });
+    });
+
+    console.log('NodeJS Server started on port 8000...');
