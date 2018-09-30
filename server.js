@@ -49,7 +49,13 @@ let enabledPlatformA = true;
 let enabledPlatformB = true;
 
 function endRound(){
-    Math.random() < 0.5 ? enabledPlatformA = false : enabledPlatformB = false
+    if(Math.random() < 0.5){
+        socket.emit()
+        enabledPlatformA = false
+    }
+    else{
+        enabledPlatformB = false
+    }
 }
 
 //calls to the server and tracking connection of each new user
@@ -67,8 +73,8 @@ io.sockets.on('connection', function(socket){
         enabledPlatformA = true;
         enabledPlatformB = true;
 
-        socket.emit('start-timer', count_until_next)
-        socket.broadcast.emit('start-timer', count_until_next)
+        socket.emit('start-round', count_until_next)
+        socket.broadcast.emit('start-round', count_until_next)
         let interval = setInterval(() =>{
             count_until_next -= 1
             console.log("count " ,count_until_next)
@@ -91,10 +97,14 @@ io.sockets.on('connection', function(socket){
 
     socket.on('drop-platform', (platform)=>{
         if(platform === "A"){
+            socket.emit('drop-platform', "A")
+            socket.broadcast.emit('drop-platform', "A")
             enabledPlatformA = false;
         }
 
         else if(platform === "B"){
+            socket.emit('drop-platform', "B")
+            socket.broadcast.emit('drop-platform', "B")
             enabledPlatformB = false;
         }
     })

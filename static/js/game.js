@@ -1,4 +1,4 @@
-const socket = io('http://ec2-18-222-212-124.us-east-2.compute.amazonaws.com:8000");
+const socket = io('localhost:8000')
 
 const btn_a = document.getElementById("testa")
 
@@ -6,6 +6,7 @@ const btn_b = document.getElementById("testb")
 
 const btn_start = document.getElementById('start')
 
+const question = document.getElementById('question')
 
 btn_a.addEventListener('click', ()=>{
     dropPlatform("A")
@@ -19,8 +20,11 @@ btn_start.addEventListener('click', () =>{
     socket.emit('start-round')
 })
 
+
 let countdown_timer = 0;
-socket.on('start-timer', (time) =>{
+socket.on('start-round', (time) =>{
+    enable_platform_A = true;
+    enable_platform_B = true;
     countdown_timer = time;
     const timer = document.getElementById('timer')
     timer.innerHTML = "Timer: " + countdown_timer
@@ -57,16 +61,29 @@ window.addEventListener('keyup', function(e){
 }, false);
 
 
+let enable_platform_A = true;
+let enable_platform_B = true;
+
+const platform_height = 510; //500 + 10 radius
 function draw_platformA(){
     ctx.fillStyle = "white"
-    ctx.fillRect(0,500+10,W/2,20)
+    ctx.fillRect(0,platform_height, W/2,20)
 }
 
 function draw_platformB(){
     ctx.fillStyle = "lightblue"
-    ctx.fillRect(W/2,500+10,W/2,20)
+    ctx.fillRect(W/2,platform_height,W/2,20)
 
 }
+
+socket.on('drop_platform', (platform)=>{
+    if(platform === "A"){
+        enable_platform_A = false
+    }
+    else if(platform === "B"){
+        enable_platform_B = false
+    }
+})
 
 //game loop to make the game smoother
 function gameLoop() {
@@ -86,14 +103,20 @@ function gameLoop() {
         socket.emit('pressed', 39);
         console.log('You are RIGHT');
     }
-    draw_platformA()
-    draw_platformB()
+    if(enable_platform_A)
+        draw_platformA()
+    if(enable_platform_B)
+        draw_platformB()
     
     window.requestAnimationFrame(gameLoop);
 }
 window.requestAnimationFrame(gameLoop);
 
 function dropPlatform(platform){
+    if(platform === "A")
+        enable_platform_A = false;
+    else if(platform === "B")
+        enable_platform_B = false;
     socket.emit('drop-platform', platform)
     
 }
