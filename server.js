@@ -1,10 +1,12 @@
 const express = require('express');
 app = express(),
-    http = require('http').createServer(app),
-    io = require('socket.io').listen(http);
+    server = require('http').createServer(app),
+    io = require('socket.io').listen(server);
 const path = require('path');
-const port = 8000;
-    http.listen(port);
+const default_port = 8000;
+    server.listen(process.env.PORT || default_port, ()=>{
+        console.log(`Listening to port ${(process.env.PORT || default_port)}`);
+    });
 
 //set view engine and static folder
 app.set('view engine', 'pug');
@@ -136,4 +138,3 @@ io.sockets.on('connection', function(socket){
     });
 });
 
-console.log('NodeJS Server started on port 8000...');
