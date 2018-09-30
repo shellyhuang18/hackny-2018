@@ -1,5 +1,18 @@
 const socket = io('http://localhost:8000');
 
+const btn_a = document.getElementById("testa")
+
+const btn_b = document.getElementById("testb")
+
+btn_a.addEventListener('click', ()=>{
+    dropPlatform("A")
+})
+
+btn_b.addEventListener('click', ()=>{
+    dropPlatform("B")
+})
+
+
 //initializing the canvas
 var canvas = document.getElementById("canvas"),
     ctx = canvas.getContext('2d'),
