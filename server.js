@@ -56,7 +56,7 @@ function newPlayer() {
 
     //Random size
     this.radius = 10
-    this.speed =  7;
+    this.speed =  9;
 
     return {'name' : this.name,"x" : this.x,"y" : this.y,"color" : this.color, "radius" : this.radius,"speed" : this.speed}
 }
@@ -147,15 +147,17 @@ io.sockets.on('connection', function(socket){
 
     socket.on('pressed', function(key){
         if(key === 38){ //up
-            currentPlayer.y -= 40;
-            socket.emit('PlayersMoving', players);
-            socket.broadcast.emit('PlayersMoving', players);
+            if(currentPlayer.y < 510 && currentPlayer.y > 470){
+                currentPlayer.y -= 40;
+                socket.emit('PlayersMoving', players);
+                socket.broadcast.emit('PlayersMoving', players);
+            }
 
         }
         if(key === 40){ //Down
             //if platform disabled and on that side fall
             if ((!enabledPlatformA && currentPlayer.x < 1440/2) ||(!enabledPlatformB && currentPlayer.x > 1440/2)) {
-                const FALL_SPEED = 10;
+                const FALL_SPEED = 5;
                 currentPlayer.y += FALL_SPEED;
                 socket.emit('PlayersMoving', players);
                 socket.broadcast.emit('PlayersMoving', players);
