@@ -1,4 +1,4 @@
-const socket = io('http://localhost:8000');
+const socket = io('https://biscuitox.herokuapp.com/');
 
 const btn_a = document.getElementById("testa")
 
