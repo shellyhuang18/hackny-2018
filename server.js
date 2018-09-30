@@ -92,6 +92,8 @@ io.sockets.on('connection', function(socket){
     socket.on('start-round', () => {
         socket.emit('question', "Waiting for next question")
         socket.broadcast.emit('question', "Waiting for next question")
+
+        //Wait 4 seconds, then show question
         setTimeout(()=>{
             console.log("Waiting for round to start");
             enabledPlatformA = true;
@@ -100,27 +102,26 @@ io.sockets.on('connection', function(socket){
             socket.emit('start-round', count_until_next)
             socket.broadcast.emit('start-round', count_until_next)
 
+    
             socket.emit('question', questions[question_count].question)
             socket.broadcast.emit('question', questions[question_count].question)
             console.log("Emmiting", questions[question_count].question);
 
-            
-            if(question_count <= questions.length - 1){
+            let interval = setInterval(() =>{
                 
-                    let interval = setInterval(() =>{
-                        count_until_next -= 1
-                        console.log("count " ,count_until_next)
-                        if(count_until_next === 0) {
-                            clearInterval(interval)
-                            endRound(questions[question_count].answer, socket)
-                            count_until_next = 7
-                            question_count += 1
-                        }
-                        socket.emit('decrement-timer')
-                        socket.broadcast.emit('decrement-timer')
-                    }, 1000)
-
-            }
+                if(question_count <= questions.length - 1){
+                    count_until_next -= 1
+                    console.log("count " ,count_until_next)
+                    if(count_until_next === 0) {
+                        clearInterval(interval)
+                        endRound(questions[question_count].answer, socket)
+                        count_until_next = 7
+                        question_count += 1
+                    }
+                    socket.emit('decrement-timer')
+                    socket.broadcast.emit('decrement-timer')
+                }
+            }, 1000)
         }, 4000);
     })
 

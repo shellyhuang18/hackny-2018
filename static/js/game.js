@@ -41,8 +41,8 @@ socket.on('decrement-timer', ()=>{
     timer.innerHTML = "Timer: " + countdown_timer
 
     if(countdown_timer === 0){
-        question.innerHTML = ""
-        socket.emit('start-round')
+        question.innerHTML = "0"
+        // socket.emit('start-round')
     }
 })
 
