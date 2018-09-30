@@ -135,17 +135,17 @@ socket.on('playerLeft', function(currentUsers){
         ctx.beginPath();
 
         //Time for some colors
-        var gradient = ctx.createRadialGradient(currentUsers[i].x, currentUsers[i].y, 0, currentUsers[i].x, currentUsers[i].y, currentUsers[i].radius);
+        // var gradient = ctx.createRadialGradient(currentUsers[i].x, currentUsers[i].y, 0, currentUsers[i].x, currentUsers[i].y, currentUsers[i].radius);
         /*
         gradient.addColorStop(0, "white");
         gradient.addColorStop(0.4, "white");
         gradient.addColorStop(0.4, currentUsers[i].color);
         gradient.addColorStop(1, "black");
         */
-        gradient.addColorStop(0.5, "white");
-        gradient.addColorStop(1, "white");
+        // gradient.addColorStop(0.5, "white");
+        // gradient.addColorStop(1, "white");
 
-        ctx.fillStyle = gradient;
+        ctx.fillStyle = currentUser[i].color;
         ctx.arc(currentUsers[i].x, currentUsers[i].y, currentUsers[i].radius, Math.PI*2, false);
         ctx.fill();
     }

@@ -32,7 +32,7 @@ app.get('/game',function(req,res){
         this.name;
         this.id = 1;
         this.x = Math.random() * 500;
-        this.y =  Math.random() * 500;
+        this.y =  200;
         //Random colors
         var r = Math.random()*255>>0;
         var g = Math.random()*255>>0;
@@ -40,7 +40,7 @@ app.get('/game',function(req,res){
         this.color = "rgba(" + r + ", " + g + ", " + b + ", 0.5)";
 
         //Random size
-        this.radius = Math.random()*20+20;
+        this.radius = 10
         this.speed =  5;
 
         return {'name' : this.name,"x" : this.x,"y" : this.y,"color" : this.color, "radius" : this.radius,"speed" : this.speed}
