@@ -5,6 +5,14 @@ var canvas = document.getElementById("canvas"),
     W = window.innerWidth,
     H = window.innerHeight;
 
+canvas.width = W 
+canvas.height = H 
+
+function clearScreen(){
+    ctx.fillStyle = "rgba(0, 0, 0)";
+    ctx.fillRect(0, 0, W, H);
+}
+
 var keys = {};
 
 window.addEventListener('keydown', function(e){
@@ -16,15 +24,26 @@ window.addEventListener('keyup', function(e){
     delete keys[e.keyCode];
 }, false);
 
+
+function draw_platformA(){
+    ctx.fillStyle = "white"
+    ctx.fillRect(0,0,W/2,H/2)
+
+}
+
+function draw_platformB(){
+
+}
+
 //game loop to make the game smoother
 function gameLoop() {
     if(keys[38]) {
         socket.emit('pressed', 38);
         console.log('You are UP');
     }
-    if(keys[40]) {
+    if(true) {
         socket.emit('pressed', 40);
-        console.log('You are DOWN');
+        // console.log('You are DOWN');
     }
     if(keys[37]) {
         socket.emit('pressed', 37);
@@ -44,8 +63,7 @@ socket.on('welcome', function(currentUser, currentUsers){
 
     ctx.globalCompositeOperation = "source-over";
     //Lets reduce the opacity of the BG paint to give the final touch
-    ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
-    ctx.fillRect(0, 0, W, H);
+    clearScreen()
 
     //Lets blend the particle with the BG
     ctx.globalCompositeOperation = "lighter";
@@ -56,35 +74,13 @@ socket.on('welcome', function(currentUser, currentUsers){
         ctx.beginPath();
 
         //Time for some colors
-
-        var gradient = ctx.createRadialGradient(currentUsers[i].x, currentUsers[i].y, 0, currentUsers[i].x, currentUsers[i].y, currentUsers[i].radius);
-        /*
-        gradient.addColorStop(0, "white");
-        gradient.addColorStop(0.4, "white");
-        gradient.addColorStop(0.4, currentUsers[i].color);
-        gradient.addColorStop(1, "black");
-        */
-        gradient.addColorStop(0.5, "white");
-        gradient.addColorStop(1, "white");
-        ctx.fillStyle = gradient;
+        ctx.fillStyle = currentUsers[i].color;
         ctx.arc(currentUsers[i].x, currentUsers[i].y, currentUsers[i].radius, Math.PI*2, false);
         ctx.fill();
     }
 
     //player
     ctx.beginPath();
-    //Time for some colors
-    var gradient = ctx.createRadialGradient(currentUser.x, currentUser.y, 0, currentUser.x, currentUser.y, currentUser.radius);
-    /*
-    gradient.addColorStop(0, "white");
-    gradient.addColorStop(0.4, "white");
-    gradient.addColorStop(0.4, currentUser.color);
-    gradient.addColorStop(1, "black");
-
-    ctx.fillStyle = gradient;
-    */
-    gradient.addColorStop(0.5, "white");
-    gradient.addColorStop(1, "white");
     ctx.arc(currentUser.x, currentUser.y, currentUser.radius, Math.PI*2, false);
     ctx.fill();
 });
@@ -93,7 +89,7 @@ socket.on('welcome', function(currentUser, currentUsers){
 socket.on('currentUsers', function(currentUsers){
     ctx.globalCompositeOperation = "source-over";
     //Lets reduce the opacity of the BG paint to give the final touch
-    ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
+    clearScreen()
 
     //Lets blend the particle with the BG
     ctx.globalCompositeOperation = "lighter";
@@ -102,18 +98,8 @@ socket.on('currentUsers', function(currentUsers){
 
         ctx.beginPath();
 
-        //Time for some colors
-        var gradient = ctx.createRadialGradient(currentUsers[i].x, currentUsers[i].y, 0, currentUsers[i].x, currentUsers[i].y, currentUsers[i].radius);
-        /*
-        gradient.addColorStop(0, "white");
-        gradient.addColorStop(0.4, "white");
-        gradient.addColorStop(0.4, currentUsers[i].color);
-        gradient.addColorStop(1, "black");
-
-        ctx.fillStyle = gradient;
-        */
-        gradient.addColorStop(0.5, "white");
-        gradient.addColorStop(1, "white");
+      
+        ctx.fillStyle = currentUsers[i].color;
         ctx.arc(currentUsers[i].x, currentUsers[i].y, currentUsers[i].radius, Math.PI*2, false);
         ctx.fill();
     }
@@ -122,10 +108,9 @@ socket.on('currentUsers', function(currentUsers){
 
 //if a player leaves, everyone gets new set of players
 socket.on('playerLeft', function(currentUsers){
-    ctx.fillRect(0, 0, W, H);
     ctx.globalCompositeOperation = "source-over";
     //Lets reduce the opacity of the BG paint to give the final touch
-    ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
+    clearScreen()
 
     //Lets blend the particle with the BG
     ctx.globalCompositeOperation = "lighter";
@@ -133,19 +118,7 @@ socket.on('playerLeft', function(currentUsers){
     for(var i = 0; i < currentUsers.length; i++){
 
         ctx.beginPath();
-
-        //Time for some colors
-        // var gradient = ctx.createRadialGradient(currentUsers[i].x, currentUsers[i].y, 0, currentUsers[i].x, currentUsers[i].y, currentUsers[i].radius);
-        /*
-        gradient.addColorStop(0, "white");
-        gradient.addColorStop(0.4, "white");
-        gradient.addColorStop(0.4, currentUsers[i].color);
-        gradient.addColorStop(1, "black");
-        */
-        // gradient.addColorStop(0.5, "white");
-        // gradient.addColorStop(1, "white");
-
-        ctx.fillStyle = currentUser[i].color;
+        ctx.fillStyle = "white";
         ctx.arc(currentUsers[i].x, currentUsers[i].y, currentUsers[i].radius, Math.PI*2, false);
         ctx.fill();
     }
@@ -156,8 +129,7 @@ socket.on('playerLeft', function(currentUsers){
 socket.on('PlayersMoving', function(players){
     ctx.globalCompositeOperation = "source-over";
     //Lets reduce the opacity of the BG paint to give the final touch
-    ctx.fillStyle = "rgba(0, 0, 0)";
-    ctx.fillRect(0, 0, W, H);
+    clearScreen()
 
     //Lets blend the particle with the BG
 
@@ -167,13 +139,7 @@ socket.on('PlayersMoving', function(players){
         for(i; i < players.length; i ++) {
 
         ctx.beginPath();
-
-        //Time for some colors
-        var gradient = ctx.createRadialGradient(players[i].x, players[i].y, 0, players[i].x, players[i].y, players[i].radius);
-        gradient.addColorStop(0.5, "white");
-        gradient.addColorStop(1, "white");
-
-        ctx.fillStyle = gradient;
+        ctx.fillStyle = "white";
         ctx.arc(players[i].x, players[i].y, players[i].radius, Math.PI*2, false);
         ctx.fill();
         }

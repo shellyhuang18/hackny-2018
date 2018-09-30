@@ -71,9 +71,9 @@ app.get('/game',function(req,res){
                     socket.broadcast.emit('PlayersMoving', players);
                 }
             }
-            if(key === 40){
+            if(key === 40){ //Down
                 if((currentPlayer.y + currentPlayer.speed) < 500){
-                    currentPlayer.y += currentPlayer.speed;
+                    currentPlayer.y += 15;
                     socket.emit('PlayersMoving', players);
                     socket.broadcast.emit('PlayersMoving', players);
                 }
