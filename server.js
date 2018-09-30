@@ -19,6 +19,10 @@ app.get('/',function(req,res){
   //__dirname : It will resolve to your project folder.
 });
 
+app.get('/control', (req,res)=>{
+    res.sendFile(path.join(__dirname+'/templates/controller.html'))
+})
+
 app.get('/game',function(req,res){
   res.sendFile(path.join(__dirname+'/templates/game.html'));
   //__dirname : It will resolve to your project folder.

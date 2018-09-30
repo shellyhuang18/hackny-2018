@@ -1,29 +1,29 @@
 
 //const socket = io('http://ec2-18-222-212-124.us-east-2.compute.amazonaws.com:8000');
 const socket = io.connect()
-const btn_a = document.getElementById("testa")
+// const btn_a = document.getElementById("testa")
 
-const btn_b = document.getElementById("testb")
+// const btn_b = document.getElementById("testb")
 
-const btn_start = document.getElementById('start')
+// const btn_start = document.getElementById('start')
 
 const question = document.getElementById('question')
 
-document.getElementById("?").addEventListener('click', ()=>{
-    console.log("enabled platform a", enable_platform_A)
-})
+// document.getElementById("?").addEventListener('click', ()=>{
+//     console.log("enabled platform a", enable_platform_A)
+// })
 
-btn_a.addEventListener('click', ()=>{
-    dropPlatform("A")
-})
+// btn_a.addEventListener('click', ()=>{
+//     dropPlatform("A")
+// })
 
-btn_b.addEventListener('click', ()=>{
-    dropPlatform("B")
-})
+// btn_b.addEventListener('click', ()=>{
+//     dropPlatform("B")
+// })
 
-btn_start.addEventListener('click', () =>{
-    socket.emit('start-round')
-})
+// btn_start.addEventListener('click', () =>{
+//     socket.emit('start-round')
+// })
 
 
 let countdown_timer = 0;

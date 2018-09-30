@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="/socket.io/socket.io.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div style="position: absolute; top: 50%; left: 0">
+        <button id="testa">drop platform a</button>
+        <button id="testb">drop platform b</button>
+        <button id='start'>Start Round</button>
+        <button id="?"> test </button>
+    </div>
+
+    <script>
+        const socket = io.connect()
+        const btn_a = document.getElementById("testa")
+
+        const btn_b = document.getElementById("testb")
+
+        const btn_start = document.getElementById('start')
+
+
+        function dropPlatform(platform){
+            console.log("Uh, dropping", platform);
+            if(platform === "A")
+                enable_platform_A = false;
+            else if(platform === "B")
+                enable_platform_B = false;
+            socket.emit('drop-platform', platform)
+        }
+
+        btn_a.addEventListener('click', ()=>{
+            dropPlatform("A")
+        })
+
+        btn_b.addEventListener('click', ()=>{
+            dropPlatform("B")
+        })
+
+        btn_start.addEventListener('click', () =>{
+            socket.emit('start-round')
+        })
+
+
+    </script>
+</body>
+</html>
