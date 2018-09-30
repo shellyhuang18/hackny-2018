@@ -1,6 +1,6 @@
 
-//const socket = io('http://ec2-18-222-212-124.us-east-2.compute.amazonaws.com:8000');
-const socket = io.connect()
+const socket = io('http://ec2-18-222-212-124.us-east-2.compute.amazonaws.com:8000');
+// const socket = io.connect()
 // const btn_a = document.getElementById("testa")
 
 // const btn_b = document.getElementById("testb")
