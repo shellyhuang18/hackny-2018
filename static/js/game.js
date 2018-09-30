@@ -1,4 +1,4 @@
-const socket = io('https://biscuitox.herokuapp.com/');
+const socket = io('http://ec2-18-222-212-124.us-east-2.compute.amazonaws.com:8000");
 
 const btn_a = document.getElementById("testa")
 
