@@ -4,6 +4,9 @@ const btn_a = document.getElementById("testa")
 
 const btn_b = document.getElementById("testb")
 
+const btn_start = document.getElementById('start')
+
+
 btn_a.addEventListener('click', ()=>{
     dropPlatform("A")
 })
@@ -12,7 +15,22 @@ btn_b.addEventListener('click', ()=>{
     dropPlatform("B")
 })
 
+btn_start.addEventListener('click', () =>{
+    socket.emit('start-round')
+})
 
+let countdown_timer = 0;
+socket.on('start-timer', (time) =>{
+    countdown_timer = time;
+    const timer = document.getElementById('timer')
+    timer.innerHTML = "Timer: " + countdown_timer
+})
+
+socket.on('decrement-timer', ()=>{
+    countdown_timer -= 1
+    const timer = document.getElementById('timer')
+    timer.innerHTML = "Timer: " + countdown_timer
+})
 //initializing the canvas
 var canvas = document.getElementById("canvas"),
     ctx = canvas.getContext('2d'),

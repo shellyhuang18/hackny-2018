@@ -22,9 +22,6 @@ app.get('/game',function(req,res){
   //__dirname : It will resolve to your project folder.
 });
 
-
-
-
 var players = [];
 
 //Lets create a function which will help us to create multiple players
@@ -49,6 +46,10 @@ function newPlayer() {
 let enabledPlatformA = true;
 let enabledPlatformB = true;
 
+function endRound(){
+    Math.random() < 0.5 ? enabledPlatformA = false : enabledPlatformB = false
+}
+
 //calls to the server and tracking connection of each new user
 io.sockets.on('connection', function(socket){
     var currentPlayer = new newPlayer(); //new player made
@@ -57,6 +58,27 @@ io.sockets.on('connection', function(socket){
     //create the players Array
     socket.broadcast.emit('currentUsers', players);
     socket.emit('welcome', currentPlayer, players);
+
+    let count_until_next = 10
+
+    socket.on('start-round', () => {
+        enabledPlatformA = true;
+        enabledPlatformB = true;
+
+        socket.emit('start-timer', count_until_next)
+        socket.broadcast.emit('start-timer', count_until_next)
+        let interval = setInterval(() =>{
+            count_until_next -= 1
+            console.log("count " ,count_until_next)
+            if(count_until_next === 0) {
+                clearInterval(interval)
+                endRound()
+                count_until_next = 10
+            }
+            socket.emit('decrement-timer')
+            socket.broadcast.emit('decrement-timer')
+        }, 1000)
+    })
 
         //disconnected
     socket.on('disconnect', function(){
