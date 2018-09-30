@@ -60,13 +60,17 @@ function newPlayer() {
 let enabledPlatformA = true;
 let enabledPlatformB = true;
 
-function endRound(){
-    if(Math.random() < 0.5){
-        socket.emit()
+function endRound(answer, socket){
+    if(answer){
         enabledPlatformA = false
+        socket.emit('drop_platform', "A")
+        socket.broadcast.emit('drop_platform', "A")
     }
     else{
         enabledPlatformB = false
+        socket.emit('drop_platform', "B")
+        socket.broadcast.emit('drop_platform', "A")
+
     }
 }
 
@@ -80,24 +84,39 @@ io.sockets.on('connection', function(socket){
     socket.emit('welcome', currentPlayer, players);
 
     let count_until_next = 10
-
+    let question_count = 0
     socket.on('start-round', () => {
+        socket.emit('question', "Waiting for next question")
+        socket.broadcast.emit('question', "Waiting for next question")
+        setTimeout(()=>{
+        console.log("Waiting for round to start");
         enabledPlatformA = true;
         enabledPlatformB = true;
 
         socket.emit('start-round', count_until_next)
         socket.broadcast.emit('start-round', count_until_next)
-        let interval = setInterval(() =>{
-            count_until_next -= 1
-            console.log("count " ,count_until_next)
-            if(count_until_next === 0) {
-                clearInterval(interval)
-                endRound()
-                count_until_next = 10
-            }
-            socket.emit('decrement-timer')
-            socket.broadcast.emit('decrement-timer')
-        }, 1000)
+
+        socket.emit('question', questions[question_count].question)
+        socket.broadcast.emit('question', questions[question_count].question)
+
+        
+        if(question_count <= questions.length - 1){
+            
+                let interval = setInterval(() =>{
+                    count_until_next -= 1
+                    console.log("count " ,count_until_next)
+                    if(count_until_next == 0) {
+                        clearInterval(interval)
+                        endRound(questions[question_count].answer, socket)
+                        count_until_next = 7
+                        question_count += 1
+                    }
+                    socket.emit('decrement-timer')
+                    socket.broadcast.emit('decrement-timer')
+                }, 1000)
+
+        }
+        }, 4000);
     })
 
         //disconnected
@@ -108,6 +127,7 @@ io.sockets.on('connection', function(socket){
     });
 
     socket.on('drop-platform', (platform)=>{
+        console.log("CALLED");
         if(platform === "A"){
             socket.emit('drop-platform', "A")
             socket.broadcast.emit('drop-platform', "A")

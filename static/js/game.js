@@ -1,9 +1,6 @@
-<<<<<<< HEAD
-const socket = io('localhost:8000')
-=======
-const socket = io('http://ec2-18-222-212-124.us-east-2.compute.amazonaws.com:8000');
->>>>>>> 8160ab7e60e7a10333705b25ba8f9879d9e951ba
 
+//const socket = io('http://ec2-18-222-212-124.us-east-2.compute.amazonaws.com:8000');
+const socket = io.connect()
 const btn_a = document.getElementById("testa")
 
 const btn_b = document.getElementById("testb")
@@ -11,6 +8,10 @@ const btn_b = document.getElementById("testb")
 const btn_start = document.getElementById('start')
 
 const question = document.getElementById('question')
+
+document.getElementById("?").addEventListener('click', ()=>{
+    console.log("enabled platform a", enable_platform_A)
+})
 
 btn_a.addEventListener('click', ()=>{
     dropPlatform("A")
@@ -31,14 +32,26 @@ socket.on('start-round', (time) =>{
     enable_platform_B = true;
     countdown_timer = time;
     const timer = document.getElementById('timer')
-    timer.innerHTML = "Timer: " + countdown_timer
+    timer.innerHTML = "Timer 7"
 })
 
 socket.on('decrement-timer', ()=>{
     countdown_timer -= 1
     const timer = document.getElementById('timer')
     timer.innerHTML = "Timer: " + countdown_timer
+
+    if(countdown_timer === 0){
+        question.innerHTML = ""
+        socket.emit('start-round')
+    }
 })
+
+
+socket.on('question', (q) => {
+    console.log("Recieved question", q);
+    question.innerHTML = q
+})
+
 //initializing the canvas
 var canvas = document.getElementById("canvas"),
     ctx = canvas.getContext('2d'),
@@ -81,11 +94,14 @@ function draw_platformB(){
 }
 
 socket.on('drop_platform', (platform)=>{
+    console.log('dropping plat', platform);
     if(platform === "A"){
         enable_platform_A = false
+        console.log("enabled_platformA is now", enable_platform_A);
     }
     else if(platform === "B"){
         enable_platform_B = false
+        console.log("enabled_platformB is now", enable_platform_B);
     }
 })
 
@@ -117,12 +133,12 @@ function gameLoop() {
 window.requestAnimationFrame(gameLoop);
 
 function dropPlatform(platform){
+    console.log("Uh, dropping", platform);
     if(platform === "A")
         enable_platform_A = false;
     else if(platform === "B")
         enable_platform_B = false;
     socket.emit('drop-platform', platform)
-
 }
 
 //the connected user joins and gets all the players on server
