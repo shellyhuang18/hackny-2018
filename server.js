@@ -30,7 +30,7 @@ app.get('/game',function(req,res){
 
 var players = [];
 const questions = [
-  {"question":"Bubblesort is best sort", "answer":true},
+  {"question":"Bubblesort is best sort?", "answer":true},
   {"question":"The 2017 HackNY hackathon was located at NYU Courant", "answer":true},
   {"question":"Will I annoy people if I ask them questions?", "answer":true},
   {"question":"A parallelogram has parallel opposite sides AND it has five sides.", "answer":false},
@@ -93,34 +93,34 @@ io.sockets.on('connection', function(socket){
         socket.emit('question', "Waiting for next question")
         socket.broadcast.emit('question', "Waiting for next question")
         setTimeout(()=>{
-        console.log("Waiting for round to start");
-        enabledPlatformA = true;
-        enabledPlatformB = true;
+            console.log("Waiting for round to start");
+            enabledPlatformA = true;
+            enabledPlatformB = true;
 
-        socket.emit('start-round', count_until_next)
-        socket.broadcast.emit('start-round', count_until_next)
+            socket.emit('start-round', count_until_next)
+            socket.broadcast.emit('start-round', count_until_next)
 
-        socket.emit('question', questions[question_count].question)
-        socket.broadcast.emit('question', questions[question_count].question)
-        console.log("Emmiting", questions[question_count].question);
+            socket.emit('question', questions[question_count].question)
+            socket.broadcast.emit('question', questions[question_count].question)
+            console.log("Emmiting", questions[question_count].question);
 
-        
-        if(question_count <= questions.length - 1){
             
-                let interval = setInterval(() =>{
-                    count_until_next -= 1
-                    console.log("count " ,count_until_next)
-                    if(count_until_next == 0) {
-                        clearInterval(interval)
-                        endRound(questions[question_count].answer, socket)
-                        count_until_next = 7
-                        question_count += 1
-                    }
-                    socket.emit('decrement-timer')
-                    socket.broadcast.emit('decrement-timer')
-                }, 1000)
+            if(question_count <= questions.length - 1){
+                
+                    let interval = setInterval(() =>{
+                        count_until_next -= 1
+                        console.log("count " ,count_until_next)
+                        if(count_until_next === 0) {
+                            clearInterval(interval)
+                            endRound(questions[question_count].answer, socket)
+                            count_until_next = 7
+                            question_count += 1
+                        }
+                        socket.emit('decrement-timer')
+                        socket.broadcast.emit('decrement-timer')
+                    }, 1000)
 
-        }
+            }
         }, 4000);
     })
 
