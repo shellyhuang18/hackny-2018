@@ -32,7 +32,7 @@ app.get('/game',function(req,res){
         this.name;
         this.id = 1;
         this.x = Math.random() * 500;
-        this.y =  200;
+        this.y =  100; //Horizontal spawn location
         //Random colors
         var r = Math.random()*255>>0;
         var g = Math.random()*255>>0;
@@ -65,24 +65,32 @@ app.get('/game',function(req,res){
 
         socket.on('pressed', function(key){
             if(key === 38){
-                currentPlayer.y -= currentPlayer.speed;
-                socket.emit('PlayersMoving', players);
-                socket.broadcast.emit('PlayersMoving', players);
+                if((currentPlayer.y - currentPlayer.speed) >= 0){
+                    currentPlayer.y -= currentPlayer.speed;
+                    socket.emit('PlayersMoving', players);
+                    socket.broadcast.emit('PlayersMoving', players);
+                }
             }
             if(key === 40){
-                currentPlayer.y += currentPlayer.speed;
-                socket.emit('PlayersMoving', players);
-                socket.broadcast.emit('PlayersMoving', players);
+                if((currentPlayer.y + currentPlayer.speed) < 500){
+                    currentPlayer.y += currentPlayer.speed;
+                    socket.emit('PlayersMoving', players);
+                    socket.broadcast.emit('PlayersMoving', players);
+                }
             }
             if(key === 37){
-                currentPlayer.x -= currentPlayer.speed;
-                socket.emit('PlayersMoving', players);
-                socket.broadcast.emit('PlayersMoving', players);
+                if(currentPlayer.x - currentPlayer.speed >= 0){
+                    currentPlayer.x -= currentPlayer.speed;
+                    socket.emit('PlayersMoving', players);
+                    socket.broadcast.emit('PlayersMoving', players);
+                }
             }
             if(key === 39){
-                currentPlayer.x += currentPlayer.speed;
-                socket.emit('PlayersMoving', players);
-                socket.broadcast.emit('PlayersMoving', players);
+                if(currentPlayer.x + currentPlayer.speed < 500){
+                    currentPlayer.x += currentPlayer.speed;
+                    socket.emit('PlayersMoving', players);
+                    socket.broadcast.emit('PlayersMoving', players);
+                }
             }
         });
     });
