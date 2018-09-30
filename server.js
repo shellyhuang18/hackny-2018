@@ -73,7 +73,7 @@ function endRound(answer, socket){
     else{
         enabledPlatformB = false
         socket.emit('drop_platform', "B")
-        socket.broadcast.emit('drop_platform', "A")
+        socket.broadcast.emit('drop_platform', "B")
 
     }
 }
@@ -87,7 +87,7 @@ io.sockets.on('connection', function(socket){
     socket.broadcast.emit('currentUsers', players);
     socket.emit('welcome', currentPlayer, players);
 
-    let count_until_next = 10
+    let count_until_next = 7
     let question_count = 0
     socket.on('start-round', () => {
         socket.emit('question', "Waiting for next question")
@@ -102,6 +102,7 @@ io.sockets.on('connection', function(socket){
 
         socket.emit('question', questions[question_count].question)
         socket.broadcast.emit('question', questions[question_count].question)
+        console.log("Emmiting", questions[question_count].question);
 
         
         if(question_count <= questions.length - 1){
