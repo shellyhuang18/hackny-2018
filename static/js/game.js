@@ -1,4 +1,4 @@
-const socket = io('http://ec2-18-222-212-124.us-east-2.compute.amazonaws.com:8000");
+const socket = io('http://ec2-18-222-212-124.us-east-2.compute.amazonaws.com:8000');
 
 const btn_a = document.getElementById("testa")
 
@@ -37,8 +37,8 @@ var canvas = document.getElementById("canvas"),
     W = window.innerWidth,
     H = window.innerHeight;
 
-canvas.width = W 
-canvas.height = H 
+canvas.width = W
+canvas.height = H
 
 function clearScreen(){
     ctx.fillStyle = "rgba(0, 0, 0)";
@@ -88,14 +88,14 @@ function gameLoop() {
     }
     draw_platformA()
     draw_platformB()
-    
+
     window.requestAnimationFrame(gameLoop);
 }
 window.requestAnimationFrame(gameLoop);
 
 function dropPlatform(platform){
     socket.emit('drop-platform', platform)
-    
+
 }
 
 //the connected user joins and gets all the players on server
@@ -139,7 +139,7 @@ socket.on('currentUsers', function(currentUsers){
 
         ctx.beginPath();
 
-      
+
         ctx.fillStyle = currentUsers[i].color;
         ctx.arc(currentUsers[i].x, currentUsers[i].y, currentUsers[i].radius, Math.PI*2, false);
         ctx.fill();

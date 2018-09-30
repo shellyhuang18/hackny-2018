@@ -25,6 +25,18 @@ app.get('/game',function(req,res){
 });
 
 var players = [];
+const questions = [
+  {"question":"Bubblesort is best sort", "answer":true},
+  {"question":"The 2017 HackNY hackathon was located at NYU Courant", "answer":true},
+  {"question":"Will I annoy people if I ask them questions?", "answer":true},
+  {"question":"A parallelogram has parallel opposite sides AND it has five sides.", "answer":false},
+  {"question":"Linux was first created as an alternative to Windows XP.", "answer":false},
+  {"question":"The logo for Snapchat is a Bell.", "answer":false},
+  {"question":"The price for the first generation of Snapchat Spectacles was $200", "answer":false},
+  {"question":"Hypertext Programming Markup Language (HTML) is a programming language", "answer":true},
+  {"question":"Average time complexity of Quick Sort is O(logN)", "answer":false},
+  {"question":"A Stack operates in a FIFO manner", "answer":true},
+]
 
 //Lets create a function which will help us to create multiple players
 function newPlayer() {
@@ -104,7 +116,7 @@ io.sockets.on('connection', function(socket){
             currentPlayer.y -= 40;
             socket.emit('PlayersMoving', players);
             socket.broadcast.emit('PlayersMoving', players);
-            
+
         }
         if(key === 40){ //Down
             //if platform disabled and on that side fall
@@ -137,4 +149,3 @@ io.sockets.on('connection', function(socket){
         }
     });
 });
-
