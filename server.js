@@ -25,74 +25,93 @@ app.get('/game',function(req,res){
 
 
 
-    var players = [];
+var players = [];
 
-    //Lets create a function which will help us to create multiple players
-    function newPlayer() {
-        this.name;
-        this.id = 1;
-        this.x = Math.random() * 500;
-        this.y =  100; //Horizontal spawn location
-        //Random colors
-        var r = Math.random()*255>>0;
-        var g = Math.random()*255>>0;
-        var b = Math.random()*255>>0;
-        this.color = "rgba(" + r + ", " + g + ", " + b + ", 0.5)";
+//Lets create a function which will help us to create multiple players
+function newPlayer() {
+    this.name;
+    this.id = 1;
+    this.x = Math.random() * 1440;
+    this.y =  400; //Horizontal spawn location
+    //Random colors
+    var r = Math.random()*255>>0;
+    var g = Math.random()*255>>0;
+    var b = Math.random()*255>>0;
+    this.color = "rgba(" + r + ", " + g + ", " + b + ", 0.5)";
 
-        //Random size
-        this.radius = 10
-        this.speed =  5;
+    //Random size
+    this.radius = 10
+    this.speed =  7;
 
-        return {'name' : this.name,"x" : this.x,"y" : this.y,"color" : this.color, "radius" : this.radius,"speed" : this.speed}
-    }
+    return {'name' : this.name,"x" : this.x,"y" : this.y,"color" : this.color, "radius" : this.radius,"speed" : this.speed}
+}
 
+let enabledPlatformA = true;
+let enabledPlatformB = true;
 
-    //calls to the server and tracking connection of each new user
-    io.sockets.on('connection', function(socket){
-        var currentPlayer = new newPlayer(); //new player made
-        players.push(currentPlayer); //push player object into array
+//calls to the server and tracking connection of each new user
+io.sockets.on('connection', function(socket){
+    var currentPlayer = new newPlayer(); //new player made
+    players.push(currentPlayer); //push player object into array
 
-        //create the players Array
-        socket.broadcast.emit('currentUsers', players);
-        socket.emit('welcome', currentPlayer, players);
+    //create the players Array
+    socket.broadcast.emit('currentUsers', players);
+    socket.emit('welcome', currentPlayer, players);
 
-            //disconnected
-        socket.on('disconnect', function(){
-            players.splice(players.indexOf(currentPlayer), 1);
-            console.log(players);
-            socket.broadcast.emit('playerLeft', players);
-        });
-
-        socket.on('pressed', function(key){
-            if(key === 38){
-                if((currentPlayer.y - currentPlayer.speed) >= 0){
-                    currentPlayer.y -= currentPlayer.speed;
-                    socket.emit('PlayersMoving', players);
-                    socket.broadcast.emit('PlayersMoving', players);
-                }
-            }
-            if(key === 40){ //Down
-                if((currentPlayer.y + currentPlayer.speed) < 500){
-                    currentPlayer.y += 15;
-                    socket.emit('PlayersMoving', players);
-                    socket.broadcast.emit('PlayersMoving', players);
-                }
-            }
-            if(key === 37){
-                if(currentPlayer.x - currentPlayer.speed >= 0){
-                    currentPlayer.x -= currentPlayer.speed;
-                    socket.emit('PlayersMoving', players);
-                    socket.broadcast.emit('PlayersMoving', players);
-                }
-            }
-            if(key === 39){
-                if(currentPlayer.x + currentPlayer.speed < 500){
-                    currentPlayer.x += currentPlayer.speed;
-                    socket.emit('PlayersMoving', players);
-                    socket.broadcast.emit('PlayersMoving', players);
-                }
-            }
-        });
+        //disconnected
+    socket.on('disconnect', function(){
+        players.splice(players.indexOf(currentPlayer), 1);
+        console.log(players);
+        socket.broadcast.emit('playerLeft', players);
     });
 
-    console.log('NodeJS Server started on port 8000...');
+    socket.on('drop-platform', (platform)=>{
+        if(platform === "A"){
+            enabledPlatformA = false;
+        }
+
+        else if(platform === "B"){
+            enabledPlatformB = false;
+        }
+    })
+
+    socket.on('pressed', function(key){
+        if(key === 38){ //up
+            currentPlayer.y -= 40;
+            socket.emit('PlayersMoving', players);
+            socket.broadcast.emit('PlayersMoving', players);
+            
+        }
+        if(key === 40){ //Down
+            //if platform disabled and on that side fall
+            if ((!enabledPlatformA && currentPlayer.x < 1440/2) ||(!enabledPlatformB && currentPlayer.x > 1440/2)) {
+                const FALL_SPEED = 10;
+                currentPlayer.y += FALL_SPEED;
+                socket.emit('PlayersMoving', players);
+                socket.broadcast.emit('PlayersMoving', players);
+            }
+            else if((currentPlayer.y + currentPlayer.speed) < 500){
+                const FALL_SPEED = 10;
+                currentPlayer.y += FALL_SPEED;
+                socket.emit('PlayersMoving', players);
+                socket.broadcast.emit('PlayersMoving', players);
+            }
+        }
+        if(key === 37){ //left
+            if(currentPlayer.x - currentPlayer.speed >= 0){
+                currentPlayer.x -= currentPlayer.speed;
+                socket.emit('PlayersMoving', players);
+                socket.broadcast.emit('PlayersMoving', players);
+            }
+        }
+        if(key === 39){//right
+            if(currentPlayer.x + currentPlayer.speed < 1440){
+                currentPlayer.x += currentPlayer.speed;
+                socket.emit('PlayersMoving', players);
+                socket.broadcast.emit('PlayersMoving', players);
+            }
+        }
+    });
+});
+
+console.log('NodeJS Server started on port 8000...');

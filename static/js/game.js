@@ -1,3 +1,4 @@
+const socket = io('http://localhost:8000');
 
 //initializing the canvas
 var canvas = document.getElementById("canvas"),
@@ -27,11 +28,12 @@ window.addEventListener('keyup', function(e){
 
 function draw_platformA(){
     ctx.fillStyle = "white"
-    ctx.fillRect(0,0,W/2,H/2)
-
+    ctx.fillRect(0,500+10,W/2,20)
 }
 
 function draw_platformB(){
+    ctx.fillStyle = "lightblue"
+    ctx.fillRect(W/2,500+10,W/2,20)
 
 }
 
@@ -53,9 +55,17 @@ function gameLoop() {
         socket.emit('pressed', 39);
         console.log('You are RIGHT');
     }
+    draw_platformA()
+    draw_platformB()
+    
     window.requestAnimationFrame(gameLoop);
 }
 window.requestAnimationFrame(gameLoop);
+
+function dropPlatform(platform){
+    socket.emit('drop-platform', platform)
+    
+}
 
 //the connected user joins and gets all the players on server
 socket.on('welcome', function(currentUser, currentUsers){
