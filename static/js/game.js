@@ -32,7 +32,7 @@ socket.on('start-round', (time) =>{
     enable_platform_B = true;
     countdown_timer = time;
     const timer = document.getElementById('timer')
-    timer.innerHTML = "Timer 7"
+    timer.innerHTML = "Timer: 7"
 })
 
 socket.on('decrement-timer', ()=>{
@@ -40,8 +40,8 @@ socket.on('decrement-timer', ()=>{
     const timer = document.getElementById('timer')
     timer.innerHTML = "Timer: " + countdown_timer
 
-    if(countdown_timer === 0){
-        question.innerHTML = "0"
+    if(countdown_timer <= 0){
+        question.innerHTML = ""
         // socket.emit('start-round')
     }
 })
